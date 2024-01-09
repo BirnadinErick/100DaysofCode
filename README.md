@@ -4,3 +4,8 @@
 
 I am trying to fill up some gaps in my knowledge. Here have you my journey
 with lwarning rust and some stuff.
+
+---
+
+`license.*` is to prepend LICENSE text to source files; they don't correspond
+to the challenge.

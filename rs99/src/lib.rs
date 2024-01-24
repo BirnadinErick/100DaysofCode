@@ -37,9 +37,30 @@ pub fn tail2<T: Copy>(a: Vec<T>) -> Option<(T, T)> {
     }
 }
 
+// returns last element of the given list
+pub fn nth<T>(a: &Vec<T>, n: usize) -> Result<&T, &'static str> {
+    if n >= a.len() {
+        return Err("wrong n. n should be >= 0 and < length of a");
+    }
+
+    Ok(&a[n])
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn nth_test() {
+        match nth(&vec![2003, 5, 19], 1) {
+            Ok(x) => {
+                assert_eq!(5, *x);
+            }
+            Err(_) => {
+                panic!("test failed");
+            }
+        }
+    }
 
     #[test]
     fn tail_test() {

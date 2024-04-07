@@ -5,7 +5,7 @@ use std::{
 };
 
 use criterion::{black_box, criterion_group, criterion_main, Criterion};
-use sort::{bubble_sort, bubble_sort_iter};
+use sort::{bubble_sort, quick_sort};
 
 fn read_data_from_file<P>(filename: P) -> io::Result<Vec<i32>>
 where
@@ -20,8 +20,8 @@ where
 }
 
 // #[allow(unused)]
-fn benchmark_bubble_sort(c: &mut Criterion) {
-    let file_sizes = vec![10, 100, 1000, 10000, 100000, 1000000];
+fn benchmark_sort(c: &mut Criterion) {
+    let file_sizes = vec![10, 100, 1000, 10000, 100000];
 
     match std::env::current_dir() {
         Ok(cwd) => println!("{}", cwd.display()),
@@ -32,7 +32,7 @@ fn benchmark_bubble_sort(c: &mut Criterion) {
         let data = read_data_from_file(format!("./benches/data_{}.txt", size))
             .expect("Failed to read data");
 
-        let mut group = c.benchmark_group(format!("Bubble Sort - {} items", size));
+        let mut group = c.benchmark_group(format!("Sort - {} items", size));
 
         group.bench_function("bubble_sort", |b| {
             b.iter(|| {
@@ -41,10 +41,10 @@ fn benchmark_bubble_sort(c: &mut Criterion) {
             })
         });
 
-        group.bench_function("bubble_sort_iter", |b| {
+        group.bench_function("quick sort", |b| {
             b.iter(|| {
                 let mut data_clone = data.clone();
-                bubble_sort_iter(black_box(&mut data_clone));
+                quick_sort(black_box(&mut data_clone));
             })
         });
 
@@ -52,5 +52,5 @@ fn benchmark_bubble_sort(c: &mut Criterion) {
     }
 }
 
-criterion_group!(benches, benchmark_bubble_sort);
+criterion_group!(benches, benchmark_sort);
 criterion_main!(benches);

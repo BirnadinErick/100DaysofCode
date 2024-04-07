@@ -37,6 +37,50 @@ pub fn bubble_sort_iter<T: Ord + Clone>(arr: &mut [T]) {
     }
 }
 
+fn partition<T: Ord + Copy>(arr: &mut [T], lo: usize, hi: usize) -> usize {
+    let pivot = arr[hi];
+    let mut idx = lo; // where we swapped last time
+
+    for i in lo..hi {
+        if arr[i] <= pivot {
+            // swap because only smaller values are on left side
+            arr.swap(idx, i);
+
+            idx += 1;
+        }
+    }
+
+    // now swap our pivot as well
+    // because now greater values are at and beyond
+    // out last swapped place
+    // idx += 1;
+    arr.swap(hi, idx);
+
+    idx
+}
+
+fn sort<T: Ord + Copy>(arr: &mut [T], lo: usize, hi: usize) {
+    if lo >= hi {
+        return;
+    }
+
+    let pivot_idx = partition(arr, lo, hi);
+
+    if pivot_idx > 0 {
+        sort(arr, lo, pivot_idx - 1);
+    }
+
+    sort(arr, pivot_idx + 1, hi);
+}
+
+pub fn quick_sort<T: Ord + Copy>(arr: &mut [T]) {
+    if arr.is_empty() {
+        return;
+    }
+
+    sort(arr, 0, arr.len() - 1);
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -77,6 +121,15 @@ mod tests {
         let mut ve1 = vec![6, 5, 4, 3, 2, 1];
         let cloned = ve1.clone();
         bubble_sort(&mut ve1);
+        assert!(is_sorted(&ve1) && have_same_elements(&ve1, &cloned));
+    }
+
+    #[test]
+    fn descending_quicksort() {
+        //descending
+        let mut ve1 = vec![6, 5, 4, 3, 2, 1];
+        let cloned = ve1.clone();
+        quick_sort(&mut ve1);
         assert!(is_sorted(&ve1) && have_same_elements(&ve1, &cloned));
     }
 
